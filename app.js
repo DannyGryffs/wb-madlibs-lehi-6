@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import nunjucks from 'nunjucks';
+import sample from 'lodash.sample';
 
 const app = express();
 const port = '8000';
@@ -27,7 +28,7 @@ const COMPLIMENTS = [
   'wowza',
   'oh-so-not-meh',
   'brilliant',
-  'ducky',
+  'lucky',
   'coolio',
   'incredible',
   'wonderful',
@@ -48,5 +49,27 @@ app.get('/hello', (req, res) => {
 // Handle the form from /hello and greet the user.
 app.get('/greet', (req, res) => {
   const name = req.query.name || 'stranger';
-  res.render('greet.html.njk', { name: name });
+  const compliment = sample(COMPLIMENTS);
+  res.render('greet.html.njk', {
+    name: name,
+    compliment: compliment
+  });
+});
+
+app.get('/game', (req, res) => {
+
+  console.log(req.query.q)
+
+  if (req.query.q === 'y'){
+    res.render('game.html.njk')
+
+  }else{
+    res.render('goodbye.html.njk')
+  }
+  app.get('/madlib', (req, res) => {
+    const {noun, color, adjective, name} = req.query
+
+    res.render('madlib.html.njk', {name, adjective, noun, color});
+  });
+  
 });
